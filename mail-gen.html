@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Auto compose Email</title>
+   
+  </head>
+  <body style="text-align: center; background-color: azure;">
+    <div>
+      <h2>Compose Email</h2>
+      <label for="subject" style="font-weight: bold; font-size: large;">Subject:</label>
+      <input 
+        type="text"
+        id="subject"
+
+      />
+      <button onclick="generateEmail()">Generate Email</button>
+    </div>
+    <div>
+        <br>
+      <textarea id="emailContent" rows="10" cols="100"></textarea>
+    </div>
+    <script>
+      function generateEmail() {
+        const subject = document.getElementById("subject").value;
+        const apiKey = "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"; // Replace with your actual API key
+
+        const apiUrl =
+          "https://api.openai.com/v1/engines/text-davinci-003/completions";
+        const prompt = "Write a short email about " + subject + ": ";
+
+        fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + apiKey,
+          },
+          body: JSON.stringify({
+            prompt: prompt,
+            temperature: 0.7,
+            max_tokens: 150,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const emailContent = data.choices[0].text.trim();
+            document.getElementById("emailContent").value = emailContent;
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+  </body>
+</html>
+
 
